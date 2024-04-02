@@ -1,4 +1,4 @@
-const submitButton = document.getElementById("submit-button");
+const submitButton = document.querySelector(".song-titles__button");
 
 submitButton.addEventListener("click", (e) => {
   e.preventDefault();
@@ -23,15 +23,15 @@ async function getBearerToken() {
     .then((data) => {
       if (data) {
         const bearerToken = data.access_token;
-        getAllSongsInSpecificGenre("nmixx", bearerToken);
+        getAllSongsBySpecificArtist("nmixx", bearerToken);
       }
     })
     .catch((error) => console.error("Error:", error));
 }
 
-async function getAllSongsInSpecificGenre(genre, bearerToken) {
+async function getAllSongsBySpecificArtist(artist, bearerToken) {
   await fetch(
-    `https://api.spotify.com/v1/search?q=${genre}&type=track&market=US&limit=50`,
+    `https://api.spotify.com/v1/search?q=artist:${artist}&type=track&market=US&limit=50`,
     {
       credentials: "omit",
       headers: {
