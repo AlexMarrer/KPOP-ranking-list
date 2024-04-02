@@ -1,0 +1,20 @@
+{
+  "name": "kpop-ranking-list",
+  "productName": "Kpop Ranking List",
+  "version": "1.0.0",
+  "description": "app for kpop songs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "KPOP-RANKING-LIST"
+  },
+  "author": "Alex",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^29.1.6",
+    "toastify-js": "^1.12.0"
+  }
+}
