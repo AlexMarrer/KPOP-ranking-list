@@ -24,7 +24,7 @@ async function getBearerToken() {
 
 async function getAllSongsInSpecificGenre(genre, bearerToken) {
   await fetch(
-    `https://api.spotify.com/v1/search?q=genre:${genre}&type=track&market=US&limit=50`,
+    `https://api.spotify.com/v1/search?q=${genre}&type=track&market=US&limit=50`,
     {
       credentials: "omit",
       headers: {
