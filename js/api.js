@@ -1,3 +1,10 @@
+const submitButton = document.getElementById("submit-button");
+
+submitButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  getBearerToken();
+});
+
 async function getBearerToken() {
   await fetch("https://accounts.spotify.com/api/token", {
     credentials: "omit",
@@ -16,7 +23,7 @@ async function getBearerToken() {
     .then((data) => {
       if (data) {
         const bearerToken = data.access_token;
-        getAllSongsInSpecificGenre("k-pop", bearerToken);
+        getAllSongsInSpecificGenre("nmixx", bearerToken);
       }
     })
     .catch((error) => console.error("Error:", error));
@@ -53,5 +60,3 @@ async function getAllSongsInSpecificGenre(genre, bearerToken) {
     })
     .catch((error) => console.error("Error:", error));
 }
-
-getBearerToken();
