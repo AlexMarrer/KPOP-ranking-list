@@ -19,9 +19,30 @@
 }
 
 .song-titles__list {
+  box-sizing: border-box;
+  list-style: none;
+  width: 80%;
+  height: 80%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.song-titles__list-item:nth-of-type(2n) {
+  background-color: rgb(124 154 200 / 0.4);
+}
+
+.song-titles__list {
   grid-area: songs;
 }
 
 .song-titles__title {
   grid-area: title;
+}
+
+.song-artist {
+  color: rgb(124 154 200 / 0.8);
+  text-decoration: none;
+}
+
+.song-artist:hover {
+  color: rgb(69, 99, 143);
 }

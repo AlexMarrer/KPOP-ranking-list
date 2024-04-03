@@ -1,12 +1,21 @@
+const clientId = "baab6a8da98046b9a0e4ea618b13c0bc";
+const clientSecret = "2e1e482149624db1a7b60c5d4dedb040";
+const artistId = "2dd5mrQZvg6SmahdgVKDzh";
+
+// PSY: 2dd5mrQZvg6SmahdgVKDzh
+// New Jeans: 6HvZYsbFfjnjFrWF950C9d
+// LE SSERAFIM: 4SpbR6yFEvexJuaBpgAU5p
+// NMIXX: 28ot3wh4oNmoFOdVajibBl
 const search = document.querySelector(".song-titles__input");
 
 search.addEventListener("input", (e) => {
   e.preventDefault();
-  getBearerToken(search.value);
+  const allSongs = getAllSongsBySpecificArtist(search.value);
+  allSongs.then((songs) => listAllSongs(songs));
 });
 
 async function getBearerToken(searchValue) {
-  await fetch("https://accounts.spotify.com/api/token", {
+  return await fetch("https://accounts.spotify.com/api/token", {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -16,25 +25,22 @@ async function getBearerToken(searchValue) {
       "Content-Type": "application/x-www-form-urlencoded",
       "Sec-Fetch-Dest": "empty",
     },
-    body: "grant_type=client_credentials&client_id=baab6a8da98046b9a0e4ea618b13c0bc&client_secret=2e1e482149624db1a7b60c5d4dedb040",
+    body: `grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}`,
     method: "POST",
   })
     .then((response) => response.json())
-    .then(async (data) => {
+    .then((data) => {
       if (data) {
         const bearerToken = data.access_token;
-        const allSongs = await getAllSongsBySpecificArtist(
-          searchValue,
-          bearerToken
-        );
-        await listAllSongs(allSongs);
+        return bearerToken;
       }
     })
     .catch((error) => console.error("Error:", error));
 }
 
-async function getAllSongsBySpecificArtist(artist, bearerToken) {
-  await fetch(
+async function getAllSongsBySpecificArtist(artist) {
+  const bearerToken = await getBearerToken();
+  return await fetch(
     `https://api.spotify.com/v1/search?q=artist:${artist}&type=track&market=US&limit=50`,
     {
       credentials: "omit",
@@ -60,6 +66,45 @@ async function getAllSongsBySpecificArtist(artist, bearerToken) {
         const sortedTracks = tracks.sort((a, b) => b.popularity - a.popularity);
         console.log("Beliebte K-Pop Tracks:", sortedTracks);
         return sortedTracks;
+      }
+    })
+    .catch((error) => console.error("Error:", error));
+}
+
+async function getArtistData(artistId) {
+  const access_token = await getBearerToken();
+
+  await fetch(`https://api.spotify.com/v1/artists/${artistId}`, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        console.log(data, "Artist data");
+        return data;
+      }
+    })
+    .catch((error) => console.error("Error:", error));
+}
+
+async function setLogo(uri) {
+  const access_token = await getBearerToken();
+
+  await fetch(uri, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        const logo = document.querySelector(".navbar__logo");
+        logo.href = data.external_urls.spotify;
+        logo.style.backgroundImage = `url(${data.images[0].url})`;
       }
     })
     .catch((error) => console.error("Error:", error));
