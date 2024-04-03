@@ -10,11 +10,12 @@ const search = document.querySelector(".song-titles__input");
 
 search.addEventListener("input", (e) => {
   e.preventDefault();
-  getBearerToken(search.value);
+  const allSongs = getAllSongsBySpecificArtist(search.value);
+  allSongs.then((songs) => listAllSongs(songs));
 });
 
 async function getBearerToken(searchValue) {
-  await fetch("https://accounts.spotify.com/api/token", {
+  return await fetch("https://accounts.spotify.com/api/token", {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -31,14 +32,14 @@ async function getBearerToken(searchValue) {
     .then((data) => {
       if (data) {
         const bearerToken = data.access_token;
-        const allSongs = getAllSongsBySpecificArtist(searchValue, bearerToken);
-        allSongs.then((songs) => listAllSongs(songs));
+        return bearerToken;
       }
     })
     .catch((error) => console.error("Error:", error));
 }
 
-async function getAllSongsBySpecificArtist(artist, bearerToken) {
+async function getAllSongsBySpecificArtist(artist) {
+  const bearerToken = await getBearerToken();
   return await fetch(
     `https://api.spotify.com/v1/search?q=artist:${artist}&type=track&market=US&limit=50`,
     {
@@ -84,6 +85,25 @@ async function getArtistData(artistId) {
       if (data) {
         console.log(data, "Artist data");
         return data;
+      }
+    })
+    .catch((error) => console.error("Error:", error));
+}
+
+async function setLogo(uri) {
+  const access_token = await getBearerToken();
+
+  await fetch(uri, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        const logo = document.querySelector(".navbar__logo");
+        logo.style.backgroundImage = `url(${data.images[0].url})`;
       }
     })
     .catch((error) => console.error("Error:", error));
