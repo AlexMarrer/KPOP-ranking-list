@@ -1,11 +1,11 @@
-const submitButton = document.querySelector(".song-titles__button");
+const search = document.querySelector(".song-titles__input");
 
-submitButton.addEventListener("click", (e) => {
+search.addEventListener("input", (e) => {
   e.preventDefault();
-  getBearerToken();
+  getBearerToken(search.value);
 });
 
-async function getBearerToken() {
+async function getBearerToken(searchValue) {
   await fetch("https://accounts.spotify.com/api/token", {
     credentials: "omit",
     headers: {
@@ -20,10 +20,14 @@ async function getBearerToken() {
     method: "POST",
   })
     .then((response) => response.json())
-    .then((data) => {
+    .then(async (data) => {
       if (data) {
         const bearerToken = data.access_token;
-        getAllSongsBySpecificArtist("nmixx", bearerToken);
+        const allSongs = await getAllSongsBySpecificArtist(
+          searchValue,
+          bearerToken
+        );
+        await listAllSongs(allSongs);
       }
     })
     .catch((error) => console.error("Error:", error));
