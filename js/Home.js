@@ -13,7 +13,7 @@ function listAllSongs(allSongs) {
   allSongs.forEach((song) => {
     const songTitle = document.createElement("li");
     songTitle.classList.add("song-titles__list-item");
-    songTitle.textContent = `${i}. ${song.name} - ${song.artists[0].name}`;
+    songTitle.innerHTML = `${i}. <b>${song.name}</b> - <a href="${song.artists[0].external_urls.spotify}" class="song-artist">${song.artists[0].name}</a>`;
     list.appendChild(songTitle);
     i++;
   });

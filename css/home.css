@@ -37,3 +37,12 @@
 .song-titles__title {
   grid-area: title;
 }
+
+.song-artist {
+  color: rgb(124 154 200 / 0.8);
+  text-decoration: none;
+}
+
+.song-artist:hover {
+  color: rgb(69, 99, 143);
+}

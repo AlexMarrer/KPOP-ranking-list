@@ -103,6 +103,7 @@ async function setLogo(uri) {
     .then((data) => {
       if (data) {
         const logo = document.querySelector(".navbar__logo");
+        logo.href = data.external_urls.spotify;
         logo.style.backgroundImage = `url(${data.images[0].url})`;
       }
     })
